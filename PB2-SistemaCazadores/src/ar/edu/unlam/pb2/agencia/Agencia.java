@@ -2,31 +2,42 @@ package ar.edu.unlam.pb2.agencia;
 
 import java.util.*;
 
-public class Agencia {
-    private Set<Cazador> cazadores = new HashSet<>();
-    private List<Profugo> profugosCapturados = new ArrayList<>();
 
-    public void agregarCazador(Cazador c) {
-        cazadores.add(c);
+public class Agencia {
+	private String nombreDeLaAgencia;
+	private Map <Integer, Cazador> cazadoresRegistrados = new HashMap<>();
+
+    public Agencia(String nombreDeLaAgencia) {
+    	this.nombreDeLaAgencia = nombreDeLaAgencia;
+    }
+    
+    public void enviarCazadorAZona(Cazador cazador, Zona zona) {
+    	cazador.partirALaZonaDeCaptura(zona);
     }
 
-    public void enviarCazadorAZona(Cazador cazador, Zona zona) {
-        List<Profugo> capturadosEnEstaZona = new ArrayList<>();
-        List<Profugo> intimidados = new ArrayList<>();
 
-        for (Profugo p : zona.getProfugos()) {
-            if (cazador.puedeCapturar(p)) {
-                cazador.capturar(p);
-                capturadosEnEstaZona.add(p);
-                profugosCapturados.add(p);
-            } else {
-                cazador.intimidar(p);
-                intimidados.add(p);
-            }
-        }
+	public Cazador buscarCazador(Integer numeroDeLicencia) {
+		return this.cazadoresRegistrados.getOrDefault(numeroDeLicencia, null);
+	}
+    
+	public void registrarAUnCazador(Integer numeroDeLicencia, Cazador nuevo) {
+		cazadoresRegistrados.put(numeroDeLicencia, nuevo);
+		
+	}
 
-        for (Profugo p : capturadosEnEstaZona) {
-            zona.removerProfugo(p);
-        }
-    }}
+	public Boolean enviarCazadorAUnaZona(Zona zona, Integer numeroDeLicencia) throws NroDeLicenciaNoRegistradaException {
+		Cazador cazadorElegido = buscarCazador(numeroDeLicencia);
+		if(cazadorElegido == null) {
+			throw new NroDeLicenciaNoRegistradaException("El numero de licencia no existe en los registros de la Agencia");
+		}
+		
+		if(zona != null) {
+			cazadorElegido.partirALaZonaDeCaptura(zona);
+			return true;
+		}
+		return false;
+	}
+	
+	
+    }
         

@@ -5,14 +5,15 @@ import java.util.List;
 
 public abstract class Cazador {
     protected String nombre;
+    protected Zona zona;
     protected Integer experiencia;
     protected List<Profugo> capturados = new ArrayList<>();
 
-    public Cazador(String nombre) {
+    public Cazador(String nombre, Integer experiencia) {
         this.nombre = nombre;
-        this.experiencia = 0;
+        this.experiencia = experiencia;
     }
-
+    
     public abstract boolean puedeCapturar(Profugo p);
     public abstract void intimidar(Profugo p);
 
@@ -23,6 +24,18 @@ public abstract class Cazador {
     public List<Profugo> getCapturados() {
         return capturados;
     }
+
+	public Boolean partirALaZonaDeCaptura(Zona zona) {
+		if(zona != null) {
+			this.zona = zona;
+			return true;
+		}
+		return false;
+	}
+
+	public Zona getZonaDeCaptura() {
+		return this.zona;
+	}
 
 
 }
