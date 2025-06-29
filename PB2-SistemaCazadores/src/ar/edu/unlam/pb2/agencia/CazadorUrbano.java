@@ -7,12 +7,11 @@ public class CazadorUrbano extends Cazador {
 
     @Override
     public boolean puedeCapturar(Profugo p) {
-        return this.experiencia > p.getInocencia() && !p.isNervioso();
+        return this.experiencia > p.getNivelInocencia() && !p.isNervioso();
     }
     
     @Override
     public void intimidar(Profugo p) {
-        p.bajarInocencia(2);
         p.setNervioso(false);
     }
 }
