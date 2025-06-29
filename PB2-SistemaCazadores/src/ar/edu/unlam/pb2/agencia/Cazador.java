@@ -68,7 +68,15 @@ public abstract class Cazador {
         return nombre;
     }
     
+    
+    
 
     public abstract boolean puedeCapturar(Profugo profugo);
     public abstract void intimidar(Profugo profugo);
+
+	public Object getZonaDeActual() {		
+		return zonaActual;
+	}
+
+	
 }
