@@ -13,6 +13,7 @@ public class AgenciaTest {
     	assertEquals(agen.buscarCazador(00001), cazadorRural);
     }
     
+    
     @Test
     public void queLaAgenciaPuedaEnviarUnCazadorRegistradoAUnaZona() {
     	Agencia agencia= new Agencia("Agencia WestBrook");
