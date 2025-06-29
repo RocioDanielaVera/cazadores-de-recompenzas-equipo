@@ -1,5 +1,18 @@
 package ar.edu.unlam.pb2.agencia;
 
-public class CazadorSigiloso {
+public class CazadorSigiloso extends Cazador {
 
+    public CazadorSigiloso(String nombre) {
+        super(nombre);
+    }
+
+    @Override
+    public boolean puedeCapturar(Profugo profugo) {
+        return this.experiencia > profugo.getNivelInocencia() && profugo.getNivelHabilidad() < 50;
+    }
+
+    @Override
+    public void intimidar(Profugo profugo) {
+        profugo.restarHabilidad(5);
+    }
 }
