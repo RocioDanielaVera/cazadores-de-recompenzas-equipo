@@ -14,22 +14,21 @@ public class Agencia {
 		cazador.partirALaZonaDeCaptura(zona);
 	}
 
-	public Cazador buscarCazador(Integer numeroDeLicencia) {
-		return this.cazadoresRegistrados.getOrDefault(numeroDeLicencia, null);
+	public Cazador buscarCazador(Integer numeroDeLicencia) throws NroDeLicenciaNoRegistradaException {
+		Cazador encontrado = this.cazadoresRegistrados.getOrDefault(numeroDeLicencia, null);
+		if (encontrado == null) {
+			throw new NroDeLicenciaNoRegistradaException("El numero de licencia no existe en los registros de la Agencia");
+		} else {
+			return encontrado;
+		}
 	}
 
 	public void registrarAUnCazador(Integer numeroDeLicencia, Cazador nuevo) {
 		cazadoresRegistrados.put(numeroDeLicencia, nuevo);
 	}
 
-	public Boolean enviarCazadorAUnaZona(Zona zona, Integer numeroDeLicencia)
-			throws NroDeLicenciaNoRegistradaException {
+	public Boolean enviarCazadorAUnaZona(Zona zona, Integer numeroDeLicencia)throws NroDeLicenciaNoRegistradaException {
 		Cazador cazadorElegido = buscarCazador(numeroDeLicencia);
-		if (cazadorElegido == null) {
-			throw new NroDeLicenciaNoRegistradaException(
-					"El numero de licencia no existe en los registros de la Agencia");
-		}
-
 		if (zona != null) {
 			cazadorElegido.partirALaZonaDeCaptura(zona);
 			return true;

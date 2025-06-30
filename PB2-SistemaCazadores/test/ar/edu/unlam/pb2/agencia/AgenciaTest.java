@@ -6,26 +6,22 @@ import org.junit.Test;
 public class AgenciaTest {
 
     @Test
-    public void queUnCazadorSePuedaRegistrarEnUnaAgencia() {
+    public void queUnCazadorSePuedaRegistrarEnUnaAgencia() throws NroDeLicenciaNoRegistradaException  {
     	Agencia agen = new Agencia("Agencia WestBrook");
     	Cazador cazadorRural = new CazadorRural("Haymich");
     	agen.registrarAUnCazador(00001, cazadorRural);
     	assertEquals(agen.buscarCazador(00001), cazadorRural);
     }
     
-    
     @Test
-    public void queLaAgenciaPuedaEnviarUnCazadorRegistradoAUnaZona() {
+    public void queLaAgenciaPuedaEnviarUnCazadorRegistradoAUnaZona() throws NroDeLicenciaNoRegistradaException {
     	Agencia agencia= new Agencia("Agencia WestBrook");
     	Cazador cazadorRural = new CazadorRural("Haymich");
     	agencia.registrarAUnCazador(00001, cazadorRural);
     	
     	Zona ramos = new Zona("Ramos Mejia");
-    	try {
-    		assertTrue(agencia.enviarCazadorAUnaZona(ramos, 00001));
-		} catch (NroDeLicenciaNoRegistradaException e) {
-			e.printStackTrace();
-		}
+		assertTrue(agencia.enviarCazadorAUnaZona(ramos, 00001));
+  
     	assertEquals(cazadorRural.getZonaDeActual(), ramos);
     }
     
@@ -43,8 +39,7 @@ public class AgenciaTest {
     }
     
     @Test (expected = NroDeLicenciaNoRegistradaException.class)
-    public void queSeMuestreUnaExcepcionCuandoLaAgenciaEnviaAUnCazadorConUnNumeroDeLicenciaNoRegistrada() 
-    		throws NroDeLicenciaNoRegistradaException {
+    public void queSeMuestreUnaExcepcionCuandoLaAgenciaEnviaAUnCazadorConUnNumeroDeLicenciaNoRegistrada() throws NroDeLicenciaNoRegistradaException {
     	Agencia agencia = new Agencia("Agencia WestBrook");
     	Cazador cazadorRural = new CazadorRural("Haymich");
     	Zona ramos = new Zona("Ramos Mejia");

@@ -13,6 +13,6 @@ public class CazadorSigiloso extends Cazador {
 
     @Override
     public void intimidar(Profugo profugo) {
-        profugo.restarHabilidad(5);
+        profugo.perderNivelDeHabilidad(5);
     }
 }
