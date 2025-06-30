@@ -1,6 +1,9 @@
 package ar.edu.unlam.pb2.agencia;
 
+import java.util.Objects;
+
 public class Profugo implements Transformable, Entrenable {
+	
 	private String nombre;
 	private Integer habilidad; // 1 a 100
 	private Integer inocencia; // cuanto menor, más culpable
@@ -13,6 +16,23 @@ public class Profugo implements Transformable, Entrenable {
 		this.habilidad = habilidad;
 		this.inocencia = inocencia;
 		this.nervioso = nervioso;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(nombre);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Profugo other = (Profugo) obj;
+		return Objects.equals(nombre, other.nombre);
 	}
 
 	public Integer getNivelHabilidad() {

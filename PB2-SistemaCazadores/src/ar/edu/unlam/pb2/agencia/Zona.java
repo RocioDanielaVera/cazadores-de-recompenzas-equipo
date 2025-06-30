@@ -4,22 +4,33 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Zona {
-    private String nombre;
-    private Set<Profugo> profugos = new HashSet<>();
+	private String nombre;
+	private Set<Profugo> profugos = new HashSet<>();
 
-    public Zona(String nombre) {
-        this.nombre = nombre;
-    }
+	public Zona(String nombre) {
+		this.nombre = nombre;
+	}
 
-    public void agregarProfugo(Profugo p) {
-        profugos.add(p);
-    }
+	public Integer getCantidadDeProfugos() {
+		return this.profugos.size();
+	}
 
-    public Set<Profugo> getProfugos() {
-        return profugos;
-    }
+	public Boolean agregarProfugo(Profugo profugo) {
+		if (profugo != null) {
+			return this.profugos.add(profugo);
+		}
+		return false;
+	}
 
-    public void removerProfugo(Profugo p) {
-        profugos.remove(p);
-    }
+	public Set<Profugo> getProfugos() {
+		return this.profugos;
+	}
+
+	public Boolean profugoCapturado(Profugo profugo) {
+		if (profugo != null && this.profugos.contains(profugo)) {
+			return this.profugos.remove(profugo);
+		}
+		return false;
+	}
+
 }
