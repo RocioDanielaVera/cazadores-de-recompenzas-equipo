@@ -16,7 +16,7 @@ public abstract class Cazador {
         this.zonaActual = zona;
     }
 
-    public boolean buscarProfugo() {
+    public Boolean buscarProfugo() {
         if (zonaActual == null) return false;
 
         List<Profugo> profugos = new ArrayList<>(zonaActual.getProfugos());
@@ -33,7 +33,7 @@ public abstract class Cazador {
         }
 
         for (Profugo p : capturados) {
-            zonaActual.removerProfugo(p);
+            zonaActual.profugoCapturado(p);
         }
 
         this.incrementarExperiencia(intimidados, capturados.size());
@@ -47,12 +47,12 @@ public abstract class Cazador {
     }
 
     public void incrementarExperiencia(List<Profugo> intimidados, int cantidadCapturados) {
-        int minHabilidad = intimidados.stream()
+        Integer minHabilidad = intimidados.stream()
             .mapToInt(Profugo::getNivelHabilidad)
             .min()
             .orElse(0);
 
-        int experienciaGanada = minHabilidad + (2 * cantidadCapturados);
+        Integer experienciaGanada = minHabilidad + (2 * cantidadCapturados);
         this.experiencia += experienciaGanada;
 
         if (this.experiencia > 100) {
@@ -61,20 +61,18 @@ public abstract class Cazador {
     }
 
     public Integer getExperiencia() {
-        return experiencia;
+        return this.experiencia;
     }
 
     public String getNombre() {
-        return nombre;
+        return this.nombre;
     }
     
     
-    
-
-    public abstract boolean puedeCapturar(Profugo profugo);
+    public abstract Boolean puedeCapturar(Profugo profugo);
     public abstract void intimidar(Profugo profugo);
 
-	public Object getZonaDeActual() {		
+	public Zona getZonaDeActual() {		
 		return zonaActual;
 	}
 
