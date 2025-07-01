@@ -3,14 +3,17 @@ package ar.edu.unlam.pb2.agencia;
 import java.util.*;
 
 public abstract class Cazador {
+	protected Agencia agencia;
     protected String nombre;
     protected Integer experiencia;
     protected Zona zonaActual;
 
-    public Cazador(String nombre) {
+    public Cazador(String nombre, Agencia agencia) {
         this.nombre = nombre;
-        this.experiencia = new Random().nextInt(100) + 1; // 1 a 100
+        this.agencia = agencia;
+        this.experiencia = new Random().nextInt(100) + 1; 
     }
+
 
     public void partirALaZonaDeCaptura(Zona zona) {
         this.zonaActual = zona;
@@ -33,7 +36,9 @@ public abstract class Cazador {
         }
 
         for (Profugo p : capturados) {
-            zonaActual.profugoCapturado(p);
+        	 Reporte nuevo = new Reporte(this, p, this.zonaActual);
+             this.agencia.enviarReporteALaLista(nuevo);
+             zonaActual.profugoCapturado(p);
         }
 
         this.incrementarExperiencia(intimidados, capturados.size());

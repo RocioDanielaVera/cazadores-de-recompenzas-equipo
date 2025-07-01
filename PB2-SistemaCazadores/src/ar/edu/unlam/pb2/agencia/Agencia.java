@@ -3,6 +3,7 @@ package ar.edu.unlam.pb2.agencia;
 import java.util.*;
 
 public class Agencia {
+	private List<Reporte> reportes = new ArrayList<>();
 	private String nombreDeLaAgencia;
 	private Map<Integer, Cazador> cazadoresRegistrados = new HashMap<>();
 
@@ -35,5 +36,52 @@ public class Agencia {
 		}
 		return false;
 	}
+	public void enviarReporteALaLista(Reporte reporte) {
+	    reportes.add(reporte);
+	}
+	
+	public List<Profugo> getProfugosCapturados() {
+	    List<Profugo> resultado = new ArrayList<>();
+	    for (Reporte r : reportes) {
+	        resultado.add(r.getProfugo());
+	    }
+	    return resultado;
+	    
+	}
+	public Profugo getProfugoMasHabilCapturado() {
+	    return reportes.stream()
+	        .map(Reporte::getProfugo)
+	        .max(Comparator.comparingInt(Profugo::getNivelHabilidad))
+	        .orElse(null);
+	}
+	public Cazador getCazadorConMasCapturas() {
+	    Map<Cazador, Integer> contador = getContadorDeCapturasPorCazador();
+	    Cazador conMas = null;
+	    int max = 0;
+
+	    for (Map.Entry<Cazador, Integer> entrada : contador.entrySet()) {
+	        if (entrada.getValue() > max) {
+	            conMas = entrada.getKey();
+	            max = entrada.getValue();
+	        }
+	    }
+
+	    return conMas;
+	}
+	public Map<Cazador, Integer> getContadorDeCapturasPorCazador() {
+	    Map<Cazador, Integer> contador = new HashMap<>();
+
+	    for (Reporte r : reportes) {
+	        Cazador c = r.getCazador();
+	        contador.put(c, contador.getOrDefault(c, 0) + 1);
+	    }
+
+	    return contador;
+	}
+
+
+
+
+
 
 }
