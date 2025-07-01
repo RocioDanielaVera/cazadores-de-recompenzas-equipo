@@ -3,10 +3,10 @@ package ar.edu.unlam.pb2.agencia;
 import java.util.Objects;
 
 public class Profugo implements Evolucionable, Entrenable {
-	
+
 	private String nombre;
-	private Integer habilidad; // 1 a 100
-	private Integer inocencia; // cuanto menor, más culpable
+	private Integer habilidad;
+	private Integer inocencia;
 	private Boolean nervioso;
 	private Boolean proteccionLegal = false;
 	private Boolean esElite = false;
@@ -50,10 +50,10 @@ public class Profugo implements Evolucionable, Entrenable {
 	public void setNervioso(Boolean nervioso) {
 		if (this.esElite) {
 			this.nervioso = false;
-		}else {
+		} else {
 			this.nervioso = nervioso;
 		}
-	
+
 	}
 
 	@Override
@@ -107,6 +107,10 @@ public class Profugo implements Evolucionable, Entrenable {
 			this.inocencia = 40;
 		}
 		this.proteccionLegal = true;
+	}
+
+	public String getNombre() {
+		return this.nombre;
 	}
 
 }

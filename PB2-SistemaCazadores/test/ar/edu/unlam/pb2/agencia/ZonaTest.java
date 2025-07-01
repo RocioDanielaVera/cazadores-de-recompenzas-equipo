@@ -23,12 +23,12 @@ public class ZonaTest {
 		Profugo martin = new Profugo("Martin Sanchez", 50, 30, false);
 		Profugo martinInocente = new Profugo("Martin Sanchez", 10, 30, true);
 		Zona santelon = new Zona("Pueblo Santelon");
-		
+
 		assertTrue(santelon.agregarProfugo(martin));
-		
+
 		assertFalse(santelon.agregarProfugo(martinInocente));
 		assertFalse(santelon.agregarProfugo(null));
-		
+
 		assertEquals(Integer.valueOf(1), santelon.getCantidadDeProfugos());
 	}
 
@@ -37,23 +37,22 @@ public class ZonaTest {
 		Profugo martin = new Profugo("Martin Sanchez", 50, 30, false);
 		Profugo romina = new Profugo("Romina Olpes", 50, 30, false);
 		Zona santelon = new Zona("Pueblo Santelon");
-		
+
 		assertTrue(santelon.agregarProfugo(martin));
 		assertTrue(santelon.agregarProfugo(romina));
 		assertEquals(Integer.valueOf(2), santelon.getCantidadDeProfugos());
-		
+
 		assertTrue(santelon.profugoCapturado(martin));
 		assertEquals(Integer.valueOf(1), santelon.getCantidadDeProfugos());
 	}
-	
+
 	@Test
 	public void queNoSePuedaEliminarUnProfugoQueNoEstaEnLaColeccionDeProfugosDeLaZona() {
 		Profugo martin = new Profugo("Martin Sanchez", 50, 30, false);
 		Profugo romina = new Profugo("Romina Olpes", 50, 30, false);
-		Zona santelon = new Zona("Pueblo Santelon");	
+		Zona santelon = new Zona("Pueblo Santelon");
 		assertTrue(santelon.agregarProfugo(martin));
 		assertFalse(santelon.profugoCapturado(romina));
 	}
-
 
 }

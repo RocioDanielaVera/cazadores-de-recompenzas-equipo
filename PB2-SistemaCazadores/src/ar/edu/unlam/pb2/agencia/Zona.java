@@ -23,15 +23,15 @@ public class Zona {
 	}
 
 	public Profugo buscarProfugo(Profugo profugo) {
-		for(Profugo encontrado: this.profugos) {
-			if(profugo.equals(encontrado)) {
+		for (Profugo encontrado : this.profugos) {
+			if (profugo.equals(encontrado)) {
 				return encontrado;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public Set<Profugo> getProfugos() {
 		return this.profugos;
 	}
