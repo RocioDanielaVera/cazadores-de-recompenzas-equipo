@@ -42,7 +42,7 @@ public abstract class Cazador {
     }
 
     public void intimidarProfugo(Profugo profugo) {
-        profugo.restarInocencia(2);
+        profugo.perderNivelDeInocencia(2);
         this.intimidar(profugo);
     }
 

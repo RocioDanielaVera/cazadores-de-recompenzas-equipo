@@ -2,7 +2,7 @@ package ar.edu.unlam.pb2.agencia;
 
 import java.util.Objects;
 
-public class Profugo implements Transformable, Entrenable {
+public class Profugo implements Evolucionable, Entrenable {
 	
 	private String nombre;
 	private Integer habilidad; // 1 a 100
@@ -57,29 +57,29 @@ public class Profugo implements Transformable, Entrenable {
 	}
 
 	@Override
-	public void sumarHabilidad(Integer nivel) {
+	public void crecerNivelDeHabilidad(Integer nivel) {
 		if (!((this.habilidad + nivel) > 100)) {
 			this.habilidad = this.habilidad + nivel;
 		}
 	}
 
 	@Override
-	public void sumarInocencia(Integer nivel) {
+	public void crecerNivelDeInocencia(Integer nivel) {
 		if (!((this.inocencia + nivel) > 100)) {
 			this.inocencia = this.inocencia + nivel;
 		}
 	}
 
 	@Override
-	public void restarHabilidad(Integer nivel) {
-		if (!((this.habilidad - nivel) < 0)) {
+	public void perderNivelDeHabilidad(Integer nivel) {
+		if (!((this.habilidad - nivel) < 1)) {
 			this.habilidad = this.habilidad - nivel;
 		}
 	}
 
 	@Override
-	public void restarInocencia(Integer nivel) {
-		if (!((this.inocencia - nivel) < 0) && !this.proteccionLegal) {
+	public void perderNivelDeInocencia(Integer nivel) {
+		if (!((this.inocencia - nivel) < 1) && !this.proteccionLegal) {
 			this.inocencia = this.inocencia - nivel;
 		}
 	}
