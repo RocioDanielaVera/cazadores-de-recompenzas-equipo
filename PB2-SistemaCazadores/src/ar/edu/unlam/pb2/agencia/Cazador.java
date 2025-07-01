@@ -7,8 +7,8 @@ public abstract class Cazador {
 	protected String nombre;
 	protected Integer experiencia = 0;
 	protected Zona zonaActual = null;
-	protected Agencia agencia= null;
-	private final Integer LIMITE_DE_EXPERIENCIA =100;
+	protected Agencia agencia = null;
+	private final Integer LIMITE_DE_EXPERIENCIA = 100;
 
 	public Cazador(String nombre, Integer experiencia) {
 		this.nombre = nombre;
@@ -22,8 +22,7 @@ public abstract class Cazador {
 	public void partirALaZonaDeCaptura(Zona zona) {
 		this.zonaActual = zona;
 	}
-	
-	
+
 	public Boolean realizarProcesoDeCaptura() {
 		if (zonaActual == null)
 			return false;
@@ -43,9 +42,10 @@ public abstract class Cazador {
 				intimidados.add(p);
 			}
 		}
-		
-		Boolean sePudoSumarExperiencia = incrementarExperiencia(getHabilidadMinimaDeIntimidados(intimidados), capturados);
-		
+
+		Boolean sePudoSumarExperiencia = incrementarExperiencia(getHabilidadMinimaDeIntimidados(intimidados),
+				capturados);
+
 		return !capturados.isEmpty() && sePudoSumarExperiencia;
 	}
 
@@ -55,15 +55,15 @@ public abstract class Cazador {
 	}
 
 	public Boolean realizarReporte(Reporte reporte) {
-		if(this.agencia != null) {
+		if (this.agencia != null) {
 			agencia.enviarReporteALaLista(reporte);
 			return true;
 		}
 		return false;
 	}
-	
+
 	public Integer getHabilidadMinimaDeIntimidados(List<Profugo> intimidados) {
-		if(!intimidados.isEmpty()) {
+		if (!intimidados.isEmpty()) {
 			Integer minHabilidad = intimidados.stream().mapToInt(Profugo::getNivelHabilidad).min().orElse(0);
 			return minHabilidad;
 		}
@@ -71,24 +71,29 @@ public abstract class Cazador {
 	}
 
 	public Boolean incrementarExperiencia(Integer minHabilidad, List<Profugo> capturados) {
-		if(!capturados.isEmpty()) {
+		if (!capturados.isEmpty()) {
 			Integer experienciaGanada = minHabilidad + (2 * capturados.size());
 			setExperiencia(experienciaGanada);
 			return true;
 		}
 		return false;
 	}
-	
+
 	public void setExperiencia(Integer experiencia) {
+		if (experiencia == null || experiencia <= 0) {
+			return;
+		}
+
 		if ((this.experiencia + experiencia) <= this.LIMITE_DE_EXPERIENCIA) {
 			this.experiencia += experiencia;
 		}
-		
-		if( (this.experiencia == 0 && experiencia >= 100) || ((this.experiencia + experiencia) >= this.LIMITE_DE_EXPERIENCIA) ) {
+
+		if ((this.experiencia == 0 && experiencia >= 100)
+				|| ((this.experiencia + experiencia) >= this.LIMITE_DE_EXPERIENCIA)) {
 			this.experiencia = this.LIMITE_DE_EXPERIENCIA;
 		}
 	}
-	
+
 	public Integer getExperiencia() {
 		return this.experiencia;
 	}
@@ -99,6 +104,10 @@ public abstract class Cazador {
 
 	public Zona getZonaDeActual() {
 		return zonaActual;
+	}
+
+	public String getNombre() {
+		return this.nombre;
 	}
 
 }
