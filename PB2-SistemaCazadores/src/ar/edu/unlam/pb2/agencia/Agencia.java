@@ -23,9 +23,9 @@ public class Agencia {
 			return encontrado;
 		}
 	}
-
 	public void registrarAUnCazador(Integer numeroDeLicencia, Cazador nuevo) {
 		cazadoresRegistrados.put(numeroDeLicencia, nuevo);
+		nuevo.registrarseEnUnaAgencia(this);
 	}
 
 	public Boolean enviarCazadorAUnaZona(Zona zona, Integer numeroDeLicencia)throws NroDeLicenciaNoRegistradaException {

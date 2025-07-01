@@ -7,21 +7,29 @@ import java.util.Arrays;
 import org.junit.Test;
 
 public class CazadorTest {
+	
+
+	@Test
+    public void siSeCreaUnCazadorConExperiencia500_SuExperienciaSera100ComoLimiteDeExperiencia() {
+        Cazador c = new CazadorUrbano("Urbanito", 500);
+        assertEquals(Integer.valueOf(100), c.getExperiencia());
+    }
 
     @Test
-    public void queElCazadorUrbanoCaptureCorrectamente() {
-        Cazador c = new CazadorUrbano("Urbanito");
-        c.experiencia = 50; 
-
+    public void unCazadorUrbanoPodraCapturarAUnProfugoSoloSiEsteNoEsNervioso() {
+        Cazador c = new CazadorUrbano("Urbanito", 50);
         Profugo p = new Profugo("Jose", 30, 20, false); 
+        Profugo p2 = new Profugo("Lucas", 30, 20, true); 
+        assertFalse(p.isNervioso());
+        assertTrue(p2.isNervioso());
+        
         assertTrue(c.puedeCapturar(p));
+        assertFalse(c.puedeCapturar(p2));
     }
 
     @Test
     public void queElCazadorRuralNoPuedaCapturarSiNoEsNervioso() {
-        Cazador c = new CazadorRural("Ruralo");
-        c.experiencia = 80;
-
+        Cazador c = new CazadorRural("Ruralo", 80);
         Profugo p = new Profugo("Pedro", 40, 60, false); // 
 
         assertFalse(c.puedeCapturar(p));
@@ -29,8 +37,7 @@ public class CazadorTest {
 
     @Test
     public void queElCazadorSigilosoIntimideYReduzcaHabilidad() {
-        Cazador c = new CazadorSigiloso("Sigilín");
-        c.experiencia = 30;
+        Cazador c = new CazadorSigiloso("Sigilín", 30);
 
         Profugo p = new Profugo("Sombra", 55, 10, true); // 
 
@@ -41,34 +48,51 @@ public class CazadorTest {
     }
 
     @Test
-    public void queLaExperienciaNoSupere100() {
-        Cazador c = new CazadorUrbano("Limite");
-        c.experiencia = 95;
-
+    public void queAlRealizarUnProcesoDeCapturaLaExperienciaNoSupere100() {
+        Cazador c = new CazadorUrbano("Limite", 95);
+        Zona z = new Zona("Ciudad");
         Profugo p1 = new Profugo("A", 10, 10, true);
-        Profugo p2 = new Profugo("B", 10, 10, true);
-
-        c.incrementarExperiencia(Arrays.asList(p1, p2), 3); 
-
-        assertEquals(100, c.getExperiencia().intValue());
+        Profugo p2 = new Profugo("B", 10, 10, false);
+        z.agregarProfugo(p1);
+        z.agregarProfugo(p2);
+        c.partirALaZonaDeCaptura(z);
+        c.realizarProcesoDeCaptura();
+        assertEquals(Integer.valueOf(100), c.getExperiencia());
     }
 
     @Test
-    public void queUnCazadorRealiceUnaCapturaExitosa() {
+    public void siUnaZonaTieneDosProfugosYUnCazadorUrbanoLograCapturarAUnoLaZonaPasaAtener1Profugo() {
         Zona z = new Zona("Ciudad");
         Profugo p1 = new Profugo("Juan", 40, 10, false); 
         Profugo p2 = new Profugo("Carlos", 60, 30, true); 
         z.agregarProfugo(p1);
         z.agregarProfugo(p2);
 
-        Cazador c = new CazadorUrbano("Max");
-        c.experiencia = 20;
+        Cazador c = new CazadorUrbano("Max", 50);
 
         c.partirALaZonaDeCaptura(z);
-        boolean resultado = c.buscarProfugo();
-
-        assertTrue(resultado); 
+        
+        assertTrue(c.realizarProcesoDeCaptura()); 
         assertEquals(1, z.getProfugos().size()); 
         assertTrue(z.getProfugos().contains(p2));
     }
+  
+    @Test
+    public void queUnCazadorNoPuedaRealizarUnReporteSiNoEstaRegistradoAUnaAgencia() {
+        Profugo p1 = new Profugo("Juan", 40, 10, false); 
+        Zona z = new Zona("Ciudad");
+        z.agregarProfugo(p1);
+        Cazador c = new CazadorUrbano("Max", 50);
+        assertTrue(c.puedeCapturar(p1));
+        Reporte nuevo = new Reporte(c, z.buscarProfugo(p1), z);
+        assertFalse(c.realizarReporte(nuevo));  
+        
+        Agencia pompeye = new Agencia("Pompeye");
+        pompeye.registrarAUnCazador(56482, c);
+        assertTrue(c.realizarReporte(nuevo)); 
+        
+    }
+    
+    
+    
 }

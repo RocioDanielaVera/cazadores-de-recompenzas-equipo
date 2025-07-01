@@ -3,83 +3,102 @@ package ar.edu.unlam.pb2.agencia;
 import java.util.*;
 
 public abstract class Cazador {
-	protected Agencia agencia;
-    protected String nombre;
-    protected Integer experiencia;
-    protected Zona zonaActual;
 
-    public Cazador(String nombre, Agencia agencia) {
-        this.nombre = nombre;
-        this.agencia = agencia;
-        this.experiencia = new Random().nextInt(100) + 1; 
-    }
+	protected String nombre;
+	protected Integer experiencia = 0;
+	protected Zona zonaActual = null;
+	protected Agencia agencia= null;
+	private final Integer LIMITE_DE_EXPERIENCIA =100;
 
+	public Cazador(String nombre, Integer experiencia) {
+		this.nombre = nombre;
+		this.setExperiencia(experiencia);
+	}
 
-    public void partirALaZonaDeCaptura(Zona zona) {
-        this.zonaActual = zona;
-    }
+	public void registrarseEnUnaAgencia(Agencia agencia) {
+		this.agencia = agencia;
+	}
 
-    public Boolean buscarProfugo() {
-        if (zonaActual == null) return false;
+	public void partirALaZonaDeCaptura(Zona zona) {
+		this.zonaActual = zona;
+	}
+	
+	
+	public Boolean realizarProcesoDeCaptura() {
+		if (zonaActual == null)
+			return false;
 
-        List<Profugo> profugos = new ArrayList<>(zonaActual.getProfugos());
-        List<Profugo> capturados = new ArrayList<>();
-        List<Profugo> intimidados = new ArrayList<>();
+		List<Profugo> profugos = new ArrayList<>(zonaActual.getProfugos());
+		List<Profugo> capturados = new ArrayList<>();
+		List<Profugo> intimidados = new ArrayList<>();
 
-        for (Profugo p : profugos) {
-            if (this.puedeCapturar(p)) {
-                capturados.add(p);
-            } else {
-                this.intimidarProfugo(p);
-                intimidados.add(p);
-            }
-        }
+		for (Profugo p : profugos) {
+			if (this.puedeCapturar(p)) {
+				Reporte nuevo = new Reporte(this, p, this.zonaActual);
+				this.realizarReporte(nuevo);
+				zonaActual.profugoCapturado(p);
+				capturados.add(p);
+			} else {
+				this.intimidarProfugo(p);
+				intimidados.add(p);
+			}
+		}
+		
+		Boolean sePudoSumarExperiencia = incrementarExperiencia(getHabilidadMinimaDeIntimidados(intimidados), capturados);
+		
+		return !capturados.isEmpty() && sePudoSumarExperiencia;
+	}
 
-        for (Profugo p : capturados) {
-        	 Reporte nuevo = new Reporte(this, p, this.zonaActual);
-             this.agencia.enviarReporteALaLista(nuevo);
-             zonaActual.profugoCapturado(p);
-        }
+	public void intimidarProfugo(Profugo profugo) {
+		profugo.perderNivelDeInocencia(2);
+		this.intimidar(profugo);
+	}
 
-        this.incrementarExperiencia(intimidados, capturados.size());
+	public Boolean realizarReporte(Reporte reporte) {
+		if(this.agencia != null) {
+			agencia.enviarReporteALaLista(reporte);
+			return true;
+		}
+		return false;
+	}
+	
+	public Integer getHabilidadMinimaDeIntimidados(List<Profugo> intimidados) {
+		if(!intimidados.isEmpty()) {
+			Integer minHabilidad = intimidados.stream().mapToInt(Profugo::getNivelHabilidad).min().orElse(0);
+			return minHabilidad;
+		}
+		return 0;
+	}
 
-        return !capturados.isEmpty();
-    }
+	public Boolean incrementarExperiencia(Integer minHabilidad, List<Profugo> capturados) {
+		if(!capturados.isEmpty()) {
+			Integer experienciaGanada = minHabilidad + (2 * capturados.size());
+			setExperiencia(experienciaGanada);
+			return true;
+		}
+		return false;
+	}
+	
+	public void setExperiencia(Integer experiencia) {
+		if ((this.experiencia + experiencia) <= this.LIMITE_DE_EXPERIENCIA) {
+			this.experiencia += experiencia;
+		}
+		
+		if( (this.experiencia == 0 && experiencia >= 100) || ((this.experiencia + experiencia) >= this.LIMITE_DE_EXPERIENCIA) ) {
+			this.experiencia = this.LIMITE_DE_EXPERIENCIA;
+		}
+	}
+	
+	public Integer getExperiencia() {
+		return this.experiencia;
+	}
 
-    public void intimidarProfugo(Profugo profugo) {
-        profugo.perderNivelDeInocencia(2);
-        this.intimidar(profugo);
-    }
+	public abstract Boolean puedeCapturar(Profugo profugo);
 
-    public void incrementarExperiencia(List<Profugo> intimidados, int cantidadCapturados) {
-        Integer minHabilidad = intimidados.stream()
-            .mapToInt(Profugo::getNivelHabilidad)
-            .min()
-            .orElse(0);
+	public abstract void intimidar(Profugo profugo);
 
-        Integer experienciaGanada = minHabilidad + (2 * cantidadCapturados);
-        this.experiencia += experienciaGanada;
-
-        if (this.experiencia > 100) {
-            this.experiencia = 100;
-        }
-    }
-
-    public Integer getExperiencia() {
-        return this.experiencia;
-    }
-
-    public String getNombre() {
-        return this.nombre;
-    }
-    
-    
-    public abstract Boolean puedeCapturar(Profugo profugo);
-    public abstract void intimidar(Profugo profugo);
-
-	public Zona getZonaDeActual() {		
+	public Zona getZonaDeActual() {
 		return zonaActual;
 	}
 
-	
 }
