@@ -12,8 +12,7 @@ public class AgenciaTest {
 	private Zona ramos;
 	private Agencia agenciaCentral;
 	private Zona bosque;
-	
-	
+
 	@Before
 	public void setUp() {
 		agencia = new Agencia("Agencia WestBrook");
@@ -28,7 +27,7 @@ public class AgenciaTest {
 		agencia.registrarAUnCazador(00001, cazadorRural);
 		assertEquals(agencia.buscarCazador(00001), cazadorRural);
 	}
-	
+
 	@Test
 	public void queLaAgenciaPuedaEnviarUnCazadorRegistradoAUnaZona() throws NroDeLicenciaNoRegistradaException {
 		agencia.registrarAUnCazador(00001, cazadorRural);
@@ -41,17 +40,17 @@ public class AgenciaTest {
 	public void queNoSePuedaEnviarUnCazadorAUnaZonaQueNoExiste() throws NroDeLicenciaNoRegistradaException {
 		agencia.registrarAUnCazador(00001, cazadorRural);
 		assertFalse(agencia.enviarCazadorAUnaZona(null, 00001));
-		
+
 	}
 
 	@Test(expected = NroDeLicenciaNoRegistradaException.class)
 	public void queSeMuestreUnaExcepcionCuandoLaAgenciaEnviaAUnCazadorConUnNumeroDeLicenciaNoRegistrada()
 			throws NroDeLicenciaNoRegistradaException {
 		agencia.registrarAUnCazador(00001, cazadorRural);
-        assertFalse(agencia.enviarCazadorAUnaZona(ramos, 00003));
+		assertFalse(agencia.enviarCazadorAUnaZona(ramos, 00003));
 
 	}
-	
+
 	@Test
 	public void queLaAgenciaObtengaTodosLosProfugosCapturados() {
 		Cazador cazador = new CazadorUrbano("Urbano", 90);
@@ -90,9 +89,9 @@ public class AgenciaTest {
 		Profugo resultado = agenciaCentral.getProfugoMasHabilCapturado();
 
 		assertNotNull(resultado);
-		assertEquals( fuerte , resultado);
+		assertEquals(fuerte, resultado);
 	}
-	
+
 	@Test
 	public void queLaAgenciaObtengaElCazadorConMasCapturas() {
 

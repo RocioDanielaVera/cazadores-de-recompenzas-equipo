@@ -2,7 +2,6 @@ package ar.edu.unlam.pb2.agencia;
 
 import static org.junit.Assert.*;
 
-
 import org.junit.Test;
 
 public class CazadorTest {
@@ -24,7 +23,7 @@ public class CazadorTest {
 		assertTrue(c.puedeCapturar(p));
 		assertFalse(c.puedeCapturar(p2));
 	}
-	
+
 	@Test
 	public void queElCazadorRuralNoPuedaCapturarSiNoEsNervioso() {
 		Cazador c = new CazadorRural("Ruralo", 80);
@@ -76,7 +75,7 @@ public class CazadorTest {
 	}
 
 	@Test
-	public void queUnCazadorNoPuedaRealizarUnReporteSiNoEstaRegistradoAUnaAgencia() throws ProfugoNoEncontrado{
+	public void queUnCazadorNoPuedaRealizarUnReporteSiNoEstaRegistradoAUnaAgencia() throws ProfugoNoEncontrado {
 		Profugo p1 = new Profugo("Juan", 40, 10, false);
 		Zona z = new Zona("Ciudad");
 		z.agregarProfugo(p1);
@@ -102,27 +101,25 @@ public class CazadorTest {
 		assertFalse(cazador.realizarProcesoDeCaptura());
 	}
 
-	
 	@Test
 	public void queNoSePuedaRealizarUnProcesoDeCapturaSiElCazadorNoSeEncuentraEnUnaZonaEspecifica() {
 		Cazador c = new CazadorUrbano("Zero", 5);
 		assertFalse(c.realizarProcesoDeCaptura());
 	}
-	
+
 	@Test
 	public void queSePuedaSumarExperienciaPeroNuncaSobrePasar100() {
 		Cazador c = new CazadorUrbano("Zero", 50);
 		c.seSumaExperiencia(60);
 		assertEquals(Integer.valueOf(100), c.getExperiencia());
 	}
-	
+
 	@Test
 	public void queSePuedaSumarExperiencia10AUnCazadorConExperiencia50YPaseA60() {
 		Cazador c = new CazadorUrbano("Zero", 50);
 		c.seSumaExperiencia(10);
 		assertEquals(Integer.valueOf(60), c.getExperiencia());
 	}
-
 
 	@Test(expected = ValorNoValidoRException.class)
 	public void queLaExperienciaDelCazadorNuncaSeInicieConUnValorNegativoNegativa() {
