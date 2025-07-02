@@ -10,7 +10,7 @@ public class CazadorSigiloso extends Cazador {
 	public Boolean puedeCapturar(Profugo profugo) {
 		return this.experiencia > profugo.getNivelInocencia() && profugo.getNivelHabilidad() < 50;
 	}
-
+	
 	@Override
 	public void intimidar(Profugo profugo) {
 		profugo.perderNivelDeHabilidad(5);
