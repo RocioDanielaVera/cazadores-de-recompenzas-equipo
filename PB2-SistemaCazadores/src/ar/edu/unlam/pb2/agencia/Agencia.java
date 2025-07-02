@@ -10,7 +10,7 @@ public class Agencia {
 	public Agencia(String nombreDeLaAgencia) {
 		this.nombreDeLaAgencia = nombreDeLaAgencia;
 	}
-	
+
 	public void enviarCazadorAZona(Cazador cazador, Zona zona) {
 		cazador.partirALaZonaDeCaptura(zona);
 	}
@@ -18,20 +18,22 @@ public class Agencia {
 	public Cazador buscarCazador(Integer numeroDeLicencia) throws NroDeLicenciaNoRegistradaException {
 		Cazador encontrado = this.cazadoresRegistrados.getOrDefault(numeroDeLicencia, null);
 		if (encontrado == null) {
-			throw new NroDeLicenciaNoRegistradaException("El numero de licencia no existe en los registros de la Agencia");
+			throw new NroDeLicenciaNoRegistradaException(
+					"El numero de licencia no existe en los registros de la Agencia");
 		} else {
 			return encontrado;
 		}
 	}
 
 	public void registrarAUnCazador(Integer numeroDeLicencia, Cazador nuevo) {
-		if(nuevo != null) {
-		cazadoresRegistrados.put(numeroDeLicencia, nuevo);
-		nuevo.registrarseEnUnaAgencia(this);
+		if (nuevo != null) {
+			cazadoresRegistrados.put(numeroDeLicencia, nuevo);
+			nuevo.registrarseEnUnaAgencia(this);
 		}
 	}
 
-	public Boolean enviarCazadorAUnaZona(Zona zona, Integer numeroDeLicencia) throws NroDeLicenciaNoRegistradaException {
+	public Boolean enviarCazadorAUnaZona(Zona zona, Integer numeroDeLicencia)
+			throws NroDeLicenciaNoRegistradaException {
 		Cazador cazadorElegido = buscarCazador(numeroDeLicencia);
 		if (zona != null) {
 			cazadorElegido.partirALaZonaDeCaptura(zona);
@@ -57,7 +59,7 @@ public class Agencia {
 		return reportes.stream().map(Reporte::getProfugo).max(Comparator.comparingInt(Profugo::getNivelHabilidad))
 				.orElse(null);
 	}
-	
+
 	public Cazador getCazadorConMasCapturas() {
 		Map<Cazador, Integer> contador = getContadorDeCapturasPorCazador();
 		Cazador conMas = null;

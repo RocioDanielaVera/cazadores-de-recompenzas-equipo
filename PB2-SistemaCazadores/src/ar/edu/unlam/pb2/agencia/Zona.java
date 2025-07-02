@@ -26,8 +26,8 @@ public class Zona {
 	public Profugo buscarProfugo(Profugo profugo) throws ProfugoNoEncontrado {
 		Profugo encontrado = null;
 		for (Profugo p : this.profugos) {
-			if ( profugo != null && profugo.equals(p)) {
-					encontrado = p;
+			if (profugo != null && profugo.equals(p)) {
+				encontrado = p;
 			}
 		}
 
@@ -39,7 +39,7 @@ public class Zona {
 
 	}
 
-	public ArrayList <Profugo> getProfugos() {
+	public ArrayList<Profugo> getProfugos() {
 		return new ArrayList<>(this.profugos);
 	}
 
