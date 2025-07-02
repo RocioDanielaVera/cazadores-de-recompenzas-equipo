@@ -23,10 +23,6 @@ public class Reporte {
 		return profugo;
 	}
 
-	public Zona getZona() {
-		return zona;
-	}
-
 	public LocalDateTime getFechaCaptura() {
 		return fechaCaptura;
 	}

@@ -3,72 +3,70 @@ package ar.edu.unlam.pb2.agencia;
 import static org.junit.Assert.*;
 
 import java.util.List;
-
+import org.junit.Before;
 import org.junit.Test;
 
 public class AgenciaTest {
-
-	@Test
-	public void queUnCazadorSePuedaRegistrarEnUnaAgencia() throws NroDeLicenciaNoRegistradaException {
-		Agencia agen = new Agencia("Agencia WestBrook");
-		Cazador cazadorRural = new CazadorRural("Haymich", 30);
-		agen.registrarAUnCazador(00001, cazadorRural);
-		assertEquals(agen.buscarCazador(00001), cazadorRural);
+	private Agencia agencia;
+	private Cazador cazadorRural;
+	private Zona ramos;
+	private Agencia agenciaCentral;
+	private Zona bosque;
+	
+	
+	@Before
+	public void setUp() {
+		agencia = new Agencia("Agencia WestBrook");
+		cazadorRural = new CazadorRural("Haymich", 30);
+		ramos = new Zona("Ramos Mejia");
+		agenciaCentral = new Agencia("Central");
+		bosque = new Zona("Bosques");
 	}
 
 	@Test
-	public void queLaAgenciaPuedaEnviarUnCazadorRegistradoAUnaZona() throws NroDeLicenciaNoRegistradaException {
-		Agencia agencia = new Agencia("Agencia WestBrook");
-		Cazador cazadorRural = new CazadorRural("Haymich", 30);
+	public void queUnCazadorSePuedaRegistrarEnUnaAgencia() throws NroDeLicenciaNoRegistradaException {
 		agencia.registrarAUnCazador(00001, cazadorRural);
-
-		Zona ramos = new Zona("Ramos Mejia");
+		assertEquals(agencia.buscarCazador(00001), cazadorRural);
+	}
+	
+	@Test
+	public void queLaAgenciaPuedaEnviarUnCazadorRegistradoAUnaZona() throws NroDeLicenciaNoRegistradaException {
+		agencia.registrarAUnCazador(00001, cazadorRural);
 		assertTrue(agencia.enviarCazadorAUnaZona(ramos, 00001));
 
 		assertEquals(cazadorRural.getZonaDeActual(), ramos);
 	}
 
 	@Test
-	public void queNoSePuedaEnviarUnCazadorAUnaZonaQueNoExiste() {
-		Agencia agencia = new Agencia("Agencia WestBrook");
-		Cazador cazadorRural = new CazadorRural("Haymich", 30);
+	public void queNoSePuedaEnviarUnCazadorAUnaZonaQueNoExiste() throws NroDeLicenciaNoRegistradaException {
 		agencia.registrarAUnCazador(00001, cazadorRural);
-
-		try {
-			assertFalse(agencia.enviarCazadorAUnaZona(null, 00001));
-		} catch (NroDeLicenciaNoRegistradaException e) {
-			e.printStackTrace();
-		}
+		assertFalse(agencia.enviarCazadorAUnaZona(null, 00001));
+		
 	}
 
 	@Test(expected = NroDeLicenciaNoRegistradaException.class)
 	public void queSeMuestreUnaExcepcionCuandoLaAgenciaEnviaAUnCazadorConUnNumeroDeLicenciaNoRegistrada()
 			throws NroDeLicenciaNoRegistradaException {
-		Agencia agencia = new Agencia("Agencia WestBrook");
-		Cazador cazadorRural = new CazadorRural("Haymich", 30);
-		Zona ramos = new Zona("Ramos Mejia");
 		agencia.registrarAUnCazador(00001, cazadorRural);
+        assertFalse(agencia.enviarCazadorAUnaZona(ramos, 00003));
 
-		agencia.enviarCazadorAUnaZona(ramos, 00003);
 	}
-
+	
 	@Test
 	public void queLaAgenciaObtengaTodosLosProfugosCapturados() {
-		Agencia agencia = new Agencia("Central");
-		Zona zona = new Zona("Selva");
 		Cazador cazador = new CazadorUrbano("Urbano", 90);
-		agencia.registrarAUnCazador(1, cazador);
+		agenciaCentral.registrarAUnCazador(1, cazador);
 
 		Profugo p1 = new Profugo("Uno", 20, 10, false);
 		Profugo p2 = new Profugo("Dos", 30, 10, false);
 
-		zona.agregarProfugo(p1);
-		zona.agregarProfugo(p2);
+		bosque.agregarProfugo(p1);
+		bosque.agregarProfugo(p2);
 
-		agencia.enviarCazadorAZona(cazador, zona);
+		agencia.enviarCazadorAZona(cazador, bosque);
 		cazador.realizarProcesoDeCaptura();
 
-		List<Profugo> capturados = agencia.getProfugosCapturados();
+		List<Profugo> capturados = agenciaCentral.getProfugosCapturados();
 
 		assertEquals(2, capturados.size());
 		assertTrue(capturados.contains(p1));
@@ -77,50 +75,45 @@ public class AgenciaTest {
 
 	@Test
 	public void queLaAgenciaObtengaElProfugoMasHabilCapturado() {
-		Agencia agencia = new Agencia("Central");
-		Zona zona = new Zona("Bosque");
 		Cazador cazador = new CazadorRural("Ruralito", 100);
-		agencia.registrarAUnCazador(2, cazador);
+		agenciaCentral.registrarAUnCazador(2, cazador);
 
 		Profugo debil = new Profugo("Debil", 40, 10, true);
 		Profugo fuerte = new Profugo("Fuerte", 90, 10, true);
 
-		zona.agregarProfugo(debil);
-		zona.agregarProfugo(fuerte);
+		bosque.agregarProfugo(debil);
+		bosque.agregarProfugo(fuerte);
 
-		agencia.enviarCazadorAZona(cazador, zona);
+		agenciaCentral.enviarCazadorAZona(cazador, bosque);
 		cazador.realizarProcesoDeCaptura();
 
-		Profugo resultado = agencia.getProfugoMasHabilCapturado();
+		Profugo resultado = agenciaCentral.getProfugoMasHabilCapturado();
 
 		assertNotNull(resultado);
-		assertEquals("Fuerte", resultado.getNombre());
+		assertEquals( fuerte , resultado);
 	}
-
+	
 	@Test
 	public void queLaAgenciaObtengaElCazadorConMasCapturas() {
-		Agencia agencia = new Agencia("Central");
-		Zona zona1 = new Zona("Zona1");
-		Zona zona2 = new Zona("Zona2");
 
 		Cazador c1 = new CazadorUrbano("Pedro", 90);
 		Cazador c2 = new CazadorSigiloso("Luis", 90);
-		agencia.registrarAUnCazador(10, c1);
+		agenciaCentral.registrarAUnCazador(10, c1);
 		agencia.registrarAUnCazador(11, c2);
 
-		zona1.agregarProfugo(new Profugo("A", 30, 10, false));
-		zona1.agregarProfugo(new Profugo("B", 20, 15, false));
-		zona1.agregarProfugo(new Profugo("C", 10, 20, false));
+		bosque.agregarProfugo(new Profugo("A", 30, 10, false));
+		bosque.agregarProfugo(new Profugo("B", 20, 15, false));
+		bosque.agregarProfugo(new Profugo("C", 10, 20, false));
 
-		zona2.agregarProfugo(new Profugo("D", 30, 10, true));
+		ramos.agregarProfugo(new Profugo("D", 30, 10, true));
 
-		agencia.enviarCazadorAZona(c1, zona1);
+		agenciaCentral.enviarCazadorAZona(c1, bosque);
 		c1.realizarProcesoDeCaptura();
 
-		agencia.enviarCazadorAZona(c2, zona2);
+		agencia.enviarCazadorAZona(c2, ramos);
 		c2.realizarProcesoDeCaptura();
 
-		Cazador resultado = agencia.getCazadorConMasCapturas();
+		Cazador resultado = agenciaCentral.getCazadorConMasCapturas();
 		assertEquals("Pedro", resultado.getNombre());
 	}
 

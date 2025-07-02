@@ -5,14 +5,14 @@ import java.util.*;
 public abstract class Cazador {
 
 	protected String nombre;
-	protected Integer experiencia = 0;
+	protected Integer experiencia = 1;
 	protected Zona zonaActual = null;
 	protected Agencia agencia = null;
 	private final Integer LIMITE_DE_EXPERIENCIA = 100;
 
 	public Cazador(String nombre, Integer experiencia) {
 		this.nombre = nombre;
-		this.setExperiencia(experiencia);
+		this.validarIngresoDeExperiencia(experiencia);
 	}
 
 	public void registrarseEnUnaAgencia(Agencia agencia) {
@@ -26,8 +26,8 @@ public abstract class Cazador {
 	public Boolean realizarProcesoDeCaptura() {
 		if (zonaActual == null)
 			return false;
-
-		List<Profugo> profugos = new ArrayList<>(zonaActual.getProfugos());
+		
+		List<Profugo> profugos = zonaActual.getProfugos();
 		List<Profugo> capturados = new ArrayList<>();
 		List<Profugo> intimidados = new ArrayList<>();
 
@@ -61,7 +61,7 @@ public abstract class Cazador {
 		}
 		return false;
 	}
-
+	
 	public Integer getHabilidadMinimaDeIntimidados(List<Profugo> intimidados) {
 		if (!intimidados.isEmpty()) {
 			Integer minHabilidad = intimidados.stream().mapToInt(Profugo::getNivelHabilidad).min().orElse(0);
@@ -69,29 +69,35 @@ public abstract class Cazador {
 		}
 		return 0;
 	}
+	
+	
 
 	public Boolean incrementarExperiencia(Integer minHabilidad, List<Profugo> capturados) {
 		if (!capturados.isEmpty()) {
 			Integer experienciaGanada = minHabilidad + (2 * capturados.size());
-			setExperiencia(experienciaGanada);
+			seSumaExperiencia(experienciaGanada);
 			return true;
 		}
 		return false;
 	}
-
-	public void setExperiencia(Integer experiencia) {
-		if (experiencia == null || experiencia <= 0) {
-			return;
+	
+	private void validarIngresoDeExperiencia(Integer experiencia) {
+		if(experiencia <= 0 || experiencia == null) {
+			throw new ValorNoValidoRException("Valor ingresado no valido. Deber ser un numero entre 1 y 100.");
+		}else if(experiencia >= 100) {
+			this.experiencia = 100;
+		}else {
+			this.experiencia = experiencia;
 		}
+	}
 
+	public void seSumaExperiencia(Integer experiencia) {
 		if ((this.experiencia + experiencia) <= this.LIMITE_DE_EXPERIENCIA) {
 			this.experiencia += experiencia;
-		}
-
-		if ((this.experiencia == 0 && experiencia >= 100)
-				|| ((this.experiencia + experiencia) >= this.LIMITE_DE_EXPERIENCIA)) {
+		} else if (((this.experiencia + experiencia) >= this.LIMITE_DE_EXPERIENCIA)) {
 			this.experiencia = this.LIMITE_DE_EXPERIENCIA;
 		}
+		
 	}
 
 	public Integer getExperiencia() {

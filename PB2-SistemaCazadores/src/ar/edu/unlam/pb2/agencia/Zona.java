@@ -1,5 +1,6 @@
 package ar.edu.unlam.pb2.agencia;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,24 +17,30 @@ public class Zona {
 	}
 
 	public Boolean agregarProfugo(Profugo profugo) {
-		if (profugo != null) {
-			return this.profugos.add(profugo);
+		if (profugo == null) {
+			throw new ValorNoValidoRException("El profugo no puede ser nulo.");
 		}
-		return false;
+		return this.profugos.add(profugo);
 	}
 
-	public Profugo buscarProfugo(Profugo profugo) {
-		for (Profugo encontrado : this.profugos) {
-			if (profugo.equals(encontrado)) {
-				return encontrado;
+	public Profugo buscarProfugo(Profugo profugo) throws ProfugoNoEncontrado {
+		Profugo encontrado = null;
+		for (Profugo p : this.profugos) {
+			if ( profugo != null && profugo.equals(p)) {
+					encontrado = p;
 			}
 		}
 
-		return null;
+		if (encontrado == null || profugo == null) {
+			throw new ProfugoNoEncontrado("Profugo no encontrado.");
+		} else {
+			return encontrado;
+		}
+
 	}
 
-	public Set<Profugo> getProfugos() {
-		return this.profugos;
+	public ArrayList <Profugo> getProfugos() {
+		return new ArrayList<>(this.profugos);
 	}
 
 	public Boolean profugoCapturado(Profugo profugo) {
