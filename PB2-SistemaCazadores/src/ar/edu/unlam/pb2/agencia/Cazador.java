@@ -9,6 +9,7 @@ public abstract class Cazador {
 	protected Zona zonaActual = null;
 	protected Agencia agencia = null;
 	private final Integer LIMITE_DE_EXPERIENCIA = 100;
+	private List<Profugo> historialCapturas = new ArrayList<>();
 
 	public Cazador(String nombre, Integer experiencia) {
 		this.nombre = nombre;
@@ -35,16 +36,16 @@ public abstract class Cazador {
 			if (this.puedeCapturar(p)) {
 				Reporte nuevo = new Reporte(this, p, this.zonaActual);
 				this.realizarReporte(nuevo);
-				zonaActual.profugoCapturado(p);
+				this.historialCapturas.add(p);
 				capturados.add(p);
+				zonaActual.profugoCapturado(p);
 			} else {
 				this.intimidarProfugo(p);
 				intimidados.add(p);
 			}
 		}
 
-		Boolean sePudoSumarExperiencia = incrementarExperiencia(getHabilidadMinimaDeIntimidados(intimidados),
-				capturados);
+		Boolean sePudoSumarExperiencia = incrementarExperiencia(getHabilidadMinimaDeIntimidados(intimidados), capturados);
 
 		return !capturados.isEmpty() && sePudoSumarExperiencia;
 	}
@@ -96,6 +97,10 @@ public abstract class Cazador {
 			this.experiencia = this.LIMITE_DE_EXPERIENCIA;
 		}
 
+	}
+	
+	public Integer getCantidadDeCapturas() {
+		return this.historialCapturas.size();
 	}
 
 	public Integer getExperiencia() {

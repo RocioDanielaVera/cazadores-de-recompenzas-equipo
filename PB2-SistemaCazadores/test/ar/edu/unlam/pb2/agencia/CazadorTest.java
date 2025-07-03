@@ -40,8 +40,8 @@ public class CazadorTest {
 
 		c.intimidarProfugo(p);
 
-		assertEquals(8, p.getNivelInocencia().intValue()); //
-		assertEquals(50, p.getNivelHabilidad().intValue()); //
+		assertEquals(Integer.valueOf(8), p.getNivelInocencia()); //
+		assertEquals(Integer.valueOf(50), p.getNivelHabilidad()); //
 	}
 
 	@Test
@@ -54,11 +54,12 @@ public class CazadorTest {
 		z.agregarProfugo(p2);
 		c.partirALaZonaDeCaptura(z);
 		c.realizarProcesoDeCaptura();
+		assertEquals(Integer.valueOf(1), c.getCantidadDeCapturas());
 		assertEquals(Integer.valueOf(100), c.getExperiencia());
 	}
 
 	@Test
-	public void siUnaZonaTieneDosProfugosYUnCazadorUrbanoLograCapturarAUnoLaZonaPasaAtener1Profugo() {
+	public void siUnaZonaTieneDosProfugosYUnCazadorUrbanoLograCapturarAUnoLaZonaPasaAtener1Profugo() throws ProfugoNoEncontrado {
 		Zona z = new Zona("Ciudad");
 		Profugo p1 = new Profugo("Juan", 40, 10, false);
 		Profugo p2 = new Profugo("Carlos", 60, 30, true);
@@ -70,8 +71,9 @@ public class CazadorTest {
 		c.partirALaZonaDeCaptura(z);
 
 		assertTrue(c.realizarProcesoDeCaptura());
-		assertEquals(1, z.getProfugos().size());
-		assertTrue(z.getProfugos().contains(p2));
+		assertEquals(Integer.valueOf(1), c.getCantidadDeCapturas());
+		assertEquals(Integer.valueOf(1), z.getCantidadDeProfugos());
+		assertEquals(p2, z.buscarProfugo(p2));
 	}
 
 	@Test
@@ -122,7 +124,7 @@ public class CazadorTest {
 	}
 
 	@Test(expected = ValorNoValidoRException.class)
-	public void queLaExperienciaDelCazadorNuncaSeInicieConUnValorNegativoNegativa() {
+	public void queLaExperienciaDelCazadorNuncaSeInicieConUnValorNegativo() {
 		Cazador c = new CazadorUrbano("Zero", -50);
 	}
 
@@ -145,5 +147,25 @@ public class CazadorTest {
 		cazador.intimidarProfugo(profugo);
 		assertTrue(profugo.isNervioso());
 	}
+	
+	@Test
+	public void queElCazadorPuedaCazar3ProfugosInclusoSiNoEstaRegistradoEnUnaAgencia() {
+		Cazador cazador = new CazadorRural("Ruralito", 50);
+		
+		Profugo lucas = new Profugo("Lucas", 40, 20, true);
+		Profugo matias = new Profugo("Matias", 40, 20, true);
+		Profugo romina = new Profugo("Romina", 40, 20, true);
+		
+		Zona selva = new Zona("Selva");
+		
+		selva.agregarProfugo(lucas);
+		selva.agregarProfugo(matias);
+		selva.agregarProfugo(romina);
+		
+		cazador.partirALaZonaDeCaptura(selva);
+		assertTrue(cazador.realizarProcesoDeCaptura());
+		assertEquals(Integer.valueOf(3), cazador.getCantidadDeCapturas());
+	}
+
 
 }
